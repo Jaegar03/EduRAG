@@ -12,41 +12,50 @@ def process_voice_input():
     """
     Records via sounddevice (no PyAudio/compiler needed) and transcribes
     with Google's speech recognition. Returns the transcribed text or None.
+
+    Note: this records on whatever machine is running the Streamlit
+    process. That's the visitor's own machine when run locally, but on a
+    cloud deployment it's the server's (non-existent) microphone — so on
+    a hosted deploy this will reliably fail at the "no input device" step
+    and show a graceful warning rather than transcribe anything. Import
+    itself is guarded broadly below since a missing native PortAudio
+    library raises OSError, not ImportError, and must not crash the page.
     """
     try:
         import speech_recognition as sr
         import sounddevice as sd
+    except (ImportError, OSError):
+        st.warning("🎤 Voice input isn't available in this environment.")
+        return None
 
-        RECORD_SECONDS = 5
-        SAMPLE_RATE = 16000
+    RECORD_SECONDS = 5
+    SAMPLE_RATE = 16000
 
-        st.caption(f"🎤 Click and speak your question (records for {RECORD_SECONDS}s)")
-        if st.button("🎙️ Start Recording", key="voice_button", use_container_width=True):
-            try:
-                with st.spinner("Listening... Speak now!"):
-                    recording = sd.rec(
-                        int(RECORD_SECONDS * SAMPLE_RATE), samplerate=SAMPLE_RATE,
-                        channels=1, dtype="int16",
-                    )
-                    sd.wait()
+    st.caption(f"🎤 Click and speak your question (records for {RECORD_SECONDS}s)")
+    if st.button("🎙️ Start Recording", key="voice_button", use_container_width=True):
+        try:
+            with st.spinner("Listening... Speak now!"):
+                recording = sd.rec(
+                    int(RECORD_SECONDS * SAMPLE_RATE), samplerate=SAMPLE_RATE,
+                    channels=1, dtype="int16",
+                )
+                sd.wait()
 
-                with st.spinner("Processing speech..."):
-                    audio_data = sr.AudioData(recording.tobytes(), SAMPLE_RATE, 2)
-                    r = sr.Recognizer()
-                    text = r.recognize_google(audio_data)
-                    st.success(f"🎯 I heard: '{text}'")
-                    return text
+            with st.spinner("Processing speech..."):
+                audio_data = sr.AudioData(recording.tobytes(), SAMPLE_RATE, 2)
+                r = sr.Recognizer()
+                text = r.recognize_google(audio_data)
+                st.success(f"🎯 I heard: '{text}'")
+                return text
 
-            except sr.UnknownValueError:
-                st.warning("🤔 Sorry, I couldn't understand what you said. Please try again.")
-            except sr.RequestError as e:
-                st.error(f"❌ Speech recognition error: {e}")
-            except sd.PortAudioError as e:
-                st.warning(f"🎤 No microphone detected or it's in use by another app: {e}")
-            except Exception as e:
-                st.warning(f"🎤 Voice input failed: {e}")
-    except ImportError:
-        st.warning("🎤 Voice input requires: pip install speechrecognition sounddevice")
+        except sr.UnknownValueError:
+            st.warning("🤔 Sorry, I couldn't understand what you said. Please try again.")
+        except sr.RequestError as e:
+            st.error(f"❌ Speech recognition error: {e}")
+        except sd.PortAudioError as e:
+            st.warning(f"🎤 No microphone detected on this server: {e}")
+        except Exception as e:
+            st.warning(f"🎤 Voice input failed: {e}")
     return None
 
 

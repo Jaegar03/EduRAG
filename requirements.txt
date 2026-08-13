@@ -6,21 +6,20 @@ streamlit
 python-dotenv
 
 # LangChain and AI
-langchain
 langchain-community
+langchain-core
+langchain-text-splitters
 langchain-google-genai
-sentence-transformers
-InstructorEmbedding
 langchain-huggingface
+sentence-transformers
 
 # Vector Database
-# chromadb
 faiss-cpu
 
 # PDF Processing
 pypdf
 
-# Speech Recognition
+# Speech Recognition (local/dev use; gracefully disabled if unavailable)
 speechrecognition
 sounddevice
 
@@ -30,13 +29,6 @@ langdetect
 
 # Image Processing
 Pillow
-
-# Multimedia
-streamlit-webrtc
-av
-
-# Translation
-deep-translator
 
 # Charts (Progress dashboard)
 plotly

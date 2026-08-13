@@ -12,7 +12,9 @@ __pycache__/
 .env
 
 # Generated / derived data (rebuild with ingest.py)
-faiss_index/
+# Note: faiss_index/ IS committed on purpose — it's small (~1.5MB) and
+# Streamlit Community Cloud has no pre-boot hook to run ingest.py, so the
+# prebuilt index has to ship in the repo for the live deploy to work.
 chroma_db/
 data_store/
 

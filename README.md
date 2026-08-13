@@ -65,13 +65,27 @@ Get a key at [aistudio.google.com/app/apikey](https://aistudio.google.com/app/ap
 python ingest.py
 ```
 
-This creates a local `faiss_index/` folder (gitignored — rebuild it any time from `data/`).
+This creates a `faiss_index/` folder. It's committed to the repo (small, ~1.5MB) so a fresh clone — or a cloud deploy — works without a build step; re-run `ingest.py` any time `data/` changes.
 
 **5. Run the app**
 
 ```bash
 streamlit run streamlit_app_multilingual.py
 ```
+
+## Deploying (Streamlit Community Cloud)
+
+1. Go to [share.streamlit.io](https://share.streamlit.io), sign in with GitHub, and click **New app**.
+2. Pick this repo, branch `main`, main file path `streamlit_app_multilingual.py`.
+3. Under **Advanced settings**, set the Python version to **3.11** (matches `.python-version`; the newest Python releases don't yet have prebuilt wheels for every dependency here).
+4. Under **Secrets**, add:
+   ```toml
+   GOOGLE_API_KEY = "your_key_here"
+   ```
+   (Streamlit Cloud exposes top-level secrets as environment variables, which is how `os.getenv("GOOGLE_API_KEY")` picks it up — never commit a real key to `.env`.)
+5. Deploy. `packages.txt` (`libportaudio2`) is installed automatically for the voice-input dependency.
+
+**Known limitation**: voice input records audio on whatever machine runs the Streamlit process. Locally that's your own mic; on a cloud deploy it's the server's (nonexistent) mic, so it fails gracefully with a warning instead of transcribing — this is inherent to server-side mic capture, not a bug to "fix" without a browser-side recording component (e.g. `streamlit-webrtc`).
 
 ## Notes
 
