@@ -1,0 +1,42 @@
+# EduRAG Requirements
+# Install using: pip install -r requirements.txt
+
+# Core Framework
+streamlit
+python-dotenv
+
+# LangChain and AI
+langchain
+langchain-community
+langchain-google-genai
+sentence-transformers
+InstructorEmbedding
+langchain-huggingface
+
+# Vector Database
+# chromadb
+faiss-cpu
+
+# PDF Processing
+pypdf
+
+# Speech Recognition
+speechrecognition
+sounddevice
+
+# Text-to-Speech
+gtts
+langdetect
+
+# Image Processing
+Pillow
+
+# Multimedia
+streamlit-webrtc
+av
+
+# Translation
+deep-translator
+
+# Charts (Progress dashboard)
+plotly

@@ -1,0 +1,25 @@
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Secrets
+.env
+
+# Generated / derived data (rebuild with ingest.py)
+faiss_index/
+chroma_db/
+data_store/
+
+# Logs
+*.log
+error_log.txt
+
+# OS
+.DS_Store
+Thumbs.db
