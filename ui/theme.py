@@ -44,6 +44,14 @@ html, body, [data-testid="stAppViewContainer"] {{
 [data-testid="stAppViewContainer"] * {{
     font-family: "Segoe UI", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
 }}
+/* Streamlit's built-in icons (sidebar collapse arrow, expander chevron, etc.)
+   are text ligatures ("keyboard_double_arrow_left") rendered through a
+   dedicated icon font. The universal font-family rule above clobbers that,
+   so the ligature text shows up literally instead of turning into a glyph.
+   Restore it specifically for those elements. */
+[data-testid="stIconMaterial"] {{
+    font-family: "Material Symbols Rounded" !important;
+}}
 h1, h2, h3, h4 {{
     color: {TEXT};
     font-weight: 700;
